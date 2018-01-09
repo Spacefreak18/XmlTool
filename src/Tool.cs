@@ -62,9 +62,9 @@ namespace Xmltool
                     newxml = PrettyXml(newxml);
                 }
 
+                x.LoadXml(newxml);
                 if (args.Overwrite == true)
-                {
-                    x.LoadXml(newxml);
+                {   
                     x.Save(file.FullName);
                 }
                 else
@@ -77,6 +77,7 @@ namespace Xmltool
                         case (int)FileTool.filesystemObjectStatus.Directory:
                             x.Save(args.Output + @"\" + @file.Name);
                             break;
+                        case 0:
                         case (int)FileTool.filesystemObjectStatus.File:
                             x.Save(args.Output);
 
