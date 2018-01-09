@@ -43,6 +43,11 @@ namespace Xmltool
                             case @"INPUT":
                                 skipnextiteration = EvaluateSetting(parameter, @"INPUT", args[iteration + 1], hasequals, Parameters);
                                 break;
+                            case @"H":
+                            case @"HELP":
+                                skipnextiteration = 0;
+                                EvaluateSetting(parameter, @"HELP", @"TRUE", hasequals, Parameters);
+                                break;
                             case @"P":
                             case @"PRETTY":
                             case @"PRETTY-PRINT":
@@ -93,23 +98,30 @@ namespace Xmltool
                 iteration++;
             }
 
-            if (Parameters.ContainsKey("INPUT"))
+            if (Parameters.ContainsKey("HELP"))
+                ErrorMessage = "Xmltool -I [InputFile] [Options]";
+
+            if (string.IsNullOrEmpty(ErrorMessage))
             {
-                ErrorMessage = RunInput(ErrorMessage, Parameters);
-            }
-            else
-            {
-                Console.SetIn(new System.IO.StreamReader(Console.OpenStandardInput(8192))); // This will allow input >256 chars
-                while (Console.In.Peek() != -1)
+                if (Parameters.ContainsKey("INPUT"))
                 {
-                    string input = Console.In.ReadLine();
-                    if (!string.IsNullOrEmpty(input))
+                    ErrorMessage = RunInput(ErrorMessage, Parameters);
+                }
+                else
+                {
+                    Console.SetIn(new System.IO.StreamReader(Console.OpenStandardInput(8192))); // This will allow input >256 chars
+                    while (Console.In.Peek() != -1)
                     {
-                        Parameters["INPUT"] = input;
-                        ErrorMessage = RunInput(ErrorMessage, Parameters);
-                    }                   
+                        string input = Console.In.ReadLine();
+                        if (!string.IsNullOrEmpty(input))
+                        {
+                            Parameters["INPUT"] = input;
+                            ErrorMessage = RunInput(ErrorMessage, Parameters);
+                        }
+                    }
                 }
             }
+            
 
 
             if (!string.IsNullOrEmpty(ErrorMessage))
