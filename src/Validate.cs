@@ -11,7 +11,7 @@ namespace Xmltool
     {
         static string[] ActionParameters = { @"PRETTY", @"XSLT" };
         static string[] PathParameters = { @"OUTPUT"};
-        static List<string> FileSystemParameters = new List<string>{ @"OUTPUT", @"XSLT"};
+        static List<string> FileSystemParameters = new List<string>{ @"XSLT"};
 
         public static void AdjustParameters(Dictionary<string, string> Arguments)
         {
@@ -73,6 +73,17 @@ namespace Xmltool
                 if (!Arguments[@"INPUT"].Contains(@"*"))
                     FileSystemParameters.Add(@"INPUT");
             }
+
+            if (Arguments.ContainsKey(@"OUTPUT"))
+            {
+                string OutputPath = Path.GetDirectoryName(Arguments["OUTPUT"]);
+
+                if (!Directory.Exists(OutputPath))
+                {
+                    ErrorMessage = @"Output path does not exist: " + @OutputPath;
+                }
+            }
+            
 
             if (string.IsNullOrEmpty(ErrorMessage))
             {
