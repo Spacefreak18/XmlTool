@@ -168,12 +168,12 @@ namespace Xmltool
                 string output = setting.Substring(setting.IndexOf('=') + 1);
                 output = output.Trim();
                 // do not skip next iteration
-                Arguments.Add(parameter, output);
+                UpdateParameters(Arguments, parameter, output);
                 return 0;
             }
             else
             {
-                Arguments.Add(parameter, nextArgument);
+                UpdateParameters(Arguments, parameter, nextArgument);
                 // skip the next iteration
                 return 1;
             }
@@ -191,6 +191,16 @@ namespace Xmltool
             {
                 return 0;
             }
+        }
+
+        static int UpdateParameters(Dictionary<string, string> Arguments, string setting, string value)
+        {
+            if (!Arguments.ContainsKey(setting))
+                Arguments.Add(setting, value);
+            else
+                Arguments[setting] = value;
+
+            return 1;
         }
     }
 }
