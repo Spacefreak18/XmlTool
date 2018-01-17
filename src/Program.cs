@@ -101,6 +101,10 @@ namespace Xmltool
             if (Parameters.ContainsKey("HELP"))
                 ErrorMessage = "Xmltool -I [InputFile] [Options]";
 
+            if ((!Parameters.ContainsKey("XSLT")) && (!Parameters.ContainsKey("PRETTY")))
+                ErrorMessage = "Not enough options: Xmltool -I [InputFile] [Options]";
+
+
             if (string.IsNullOrEmpty(ErrorMessage))
             {
                 if (Parameters.ContainsKey("INPUT"))
@@ -109,13 +113,14 @@ namespace Xmltool
                 }
                 else
                 {
+                    Console.WriteLine("Type path to input file. Press Ctrl-C to exit.");
                     Console.SetIn(new System.IO.StreamReader(Console.OpenStandardInput(8192))); // This will allow input >256 chars
                     while (Console.In.Peek() != -1)
                     {
                         string input = Console.In.ReadLine();
                         if (!string.IsNullOrEmpty(input))
                         {
-                            Parameters["INPUT"] = input;
+                            UpdateParameters(Parameters, "INPUT", input);
                             ErrorMessage = RunInput(ErrorMessage, Parameters);
                         }
                     }
