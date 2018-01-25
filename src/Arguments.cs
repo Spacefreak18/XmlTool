@@ -80,18 +80,23 @@ namespace Xmltool
                 Overwrite = false;
             }
 
+            // trying to setup directory and filename with globbing for getfiles()
+            // regardless of if you input a file or a directory or globbing
+            // and work regardless of how the input was sent in
             Input = Arguments[@"INPUT"];
+            Input = Input.Trim();
             BasePath = Input;
 
             SetBaseAndGlob();
 
-            if (!Glob.Contains(@"*") && !Glob.EndsWith(Ext))
-            {
-                BasePath = @Input;
-                Glob = @"*." + @Ext;
-            }
-            
+            if (!BasePath.EndsWith(@"\"))
+                BasePath = BasePath + @"\";
 
+            if (!Glob.Contains(@"*"))
+                Glob = @"*" + @Glob;
+
+            if (!Glob.EndsWith(@Ext))
+                Glob = Glob + "." + @Ext;
         }
 
         private void SetBaseAndGlob()
@@ -105,7 +110,7 @@ namespace Xmltool
                 seqNum = new string[2] { Input.Substring(0, index), Input.Substring(index + 1) };
                 BasePath = seqNum[0];
                 Glob = seqNum[1];
-            }
+            }   
         }
 
     }
